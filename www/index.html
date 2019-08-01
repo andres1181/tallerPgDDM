@@ -162,16 +162,8 @@ function onSuccess(contacts) {
     var nam = "Name";
     var nombre = nam.bold();
     cell1.innerHTML = contacts[i].displayName;
-    cell2.innerHTML = nombre;
+    cell2.innerHTML = contacts[i].phoneNumbers;
 
-    console.log("Display Num = " + contacts[i].phoneNumbers);
-    var row = table.insertRow(0);
-    var cellA = row.insertCell(0);
-    var cellB = row.insertCell(1);
-    var num = "Num";
-    var numero = nam.bold();
-    cellA.innerHTML = contacts[i].phoneNumbers;
-    cellB.innerHTML = numero;
   }
 }
 
