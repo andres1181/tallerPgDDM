@@ -19,6 +19,11 @@ content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-
 <title>Hello World</title>
 </head>
 
+<header>
+  <div class="col text-center border border-secondary">
+    <h1>Taller PhoneGap</h1>
+  </div>
+</header>
 <body>
   <div class="app">
     <div class="container">
@@ -31,10 +36,11 @@ content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-
     <div class="row">
       <div class=" btn-group-vertical col">
         <button type="button" onclick="javascript:mostrarContactos();" class="btn btn-secondary">Contactos</button>
-        <button type="button" onclick="javascript:checkConnection();" class="btn btn-secondary" >Conexión</button>
-        <button type="button" onclick="javascript:leerMock();" class="btn btn-secondary" id="conect">Servicios</button>
+        <button type="button" onclick="javascript:checkConnection();" class="btn btn-secondary">Conexión</button>
         <button type="button" onclick="javascript:vibrate();" class="btn btn-secondary">Vibrar</button>
         <button type="button" onclick="javascript:capturePhotoWithFile();" class="btn btn-secondary">Cámara</button>
+        <button type="button" onclick="javascript:leerMock(1);" class="btn btn-secondary">Servicios</button>
+
       </div>
     </div>
     <br>
@@ -105,25 +111,22 @@ $(document).ready(function(){
 });
 //Fin Filtrar en la tabla
 
-$(document).ready(function(){
-  $('#conect').click(function(e){
-    e.preventDefault();
-    //    alert('Evite su comportamiento por defecto con PreventDefault');
-  });
-
-  function leerMock() {
+function leerMock(option) {
+  if (option == 1) {
     $.ajax({
       url: "http://www.programa2.net/univalle/obtener_alumnos.php",
       success: function (result) {
-        var htmlResult = "<table class='table table-bordered table-striped' id='tableContactos'>";
+        var htmlResult = "<table class='table table-bordered table-striped' id='resultado'>";
         htmlResult += "<tr>";
         htmlResult += "<th>idAlumno</th>";
         htmlResult += "<th>nombre</th>";
+htmlResult += "<th>direccion</th>";
         htmlResult += "</tr>";
         for (i in result.estado) {
           htmlResult += "<tr>";
           htmlResult += "<td>" + result.students[i].idAlumno + "</td>";
           htmlResult += "<td>" + result.students[i].nombre + "</td>";
+          htmlResult += "<td>" + result.students[i].direccion + "</td>";
           htmlResult += "</tr>";
         }
         htmlResult += "</table>";
@@ -137,174 +140,177 @@ $(document).ready(function(){
         }
       }
     })
-
+  } else if (option == 2) {
+    $('#result').load('http://www.programa2.net/univalle/obtener_alumnos.php');
   }
 
+}
 
 
-  //Inicio Mostrar Contactos
-  function mostrarContactos() {
-    var options = new ContactFindOptions();
-    var telefono=document.getElementById("myInput").value;
-    var fields = ["displayName", "phoneNumbers"];
-    var table = document.getElementById("myTable");
-    if(telefono.length>0){
-      options.filter = telefono;
-      fields = ["displayName", "phoneNumbers"];
-      table.innerHTML="";
 
-    }
-    options.multiple=true;
-    navigator.contacts.find(fields, onSuccess, onError, options);
+//Inicio Mostrar Contactos
+function mostrarContactos() {
+  var options = new ContactFindOptions();
+  var telefono=document.getElementById("myInput").value;
+  var fields = ["displayName", "phoneNumbers"];
+  var table = document.getElementById("myTable");
+  if(telefono.length>0){
+    options.filter = telefono;
+    fields = ["displayName", "phoneNumbers"];
+    table.innerHTML="";
+
   }
-  function onSuccess(contacts) {
-    //  console.log("Contactos = " + contacts.length);
-    //  alert('cantidad:'+contacts.length);
-    var table = document.getElementById("myTable");
-    for (var i = 0; i < contacts.length; i++) {
-      //  console.log("Display Name = " + contacts[i].displayName);
-      var row = table.insertRow(0);
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-      // var nam = "Name";
-      // var nombre = nam.bold();
-      cell1.innerHTML = contacts[i].displayName;
-      cell2.innerHTML = contacts[i].phoneNumbers;
+  options.multiple=true;
+  navigator.contacts.find(fields, onSuccess, onError, options);
+}
+function onSuccess(contacts) {
+  //  console.log("Contactos = " + contacts.length);
+  //  alert('cantidad:'+contacts.length);
+  var table = document.getElementById("myTable");
+  for (var i = 0; i < contacts.length; i++) {
+    //  console.log("Display Name = " + contacts[i].displayName);
+    var row = table.insertRow(0);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    // var nam = "Name";
+    // var nombre = nam.bold();
+    cell1.innerHTML = contacts[i].displayName;
+    cell2.innerHTML = contacts[i].phoneNumbers;
 
-    }
-    $("#nCont").text('Numero de contactos: ' + contacts.length);
   }
+  $("#nCont").text('Numero de contactos: ' + contacts.length);
+}
 
 
-  function onError(contacError) {
-    alert('Error!');
-  }
+function onError(contacError) {
+  alert('Error!');
+}
 
-  //Fin Mostrar Contactos
+//Fin Mostrar Contactos
 
-  function checkConnection() {
-    var networkState = navigator.connection.type;
+function checkConnection() {
+  var networkState = navigator.connection.type;
 
-    var states = {};
-    states[Connection.UNKNOWN] = 'Unknown connection';
-    states[Connection.ETHERNET] = 'Ethernet connection';
-    states[Connection.WIFI] = 'WiFi connection';
-    states[Connection.CELL_2G] = 'Cell 2G connection';
-    states[Connection.CELL_3G] = 'Cell 3G connection';
-    states[Connection.CELL_4G] = 'Cell 4G connection';
-    states[Connection.CELL] = 'Cell generic connection';
-    states[Connection.NONE] = 'No network connection';
+  var states = {};
+  states[Connection.UNKNOWN] = 'Unknown connection';
+  states[Connection.ETHERNET] = 'Ethernet connection';
+  states[Connection.WIFI] = 'WiFi connection';
+  states[Connection.CELL_2G] = 'Cell 2G connection';
+  states[Connection.CELL_3G] = 'Cell 3G connection';
+  states[Connection.CELL_4G] = 'Cell 4G connection';
+  states[Connection.CELL] = 'Cell generic connection';
+  states[Connection.NONE] = 'No network connection';
 
-    $("#mRed").text('Tipo de conexión: ' + states[networkState]);
-  }
-  //  alert('Connection type: ' + states[networkState]);
+  $("#mRed").text('Tipo de conexión: ' + states[networkState]);
+}
+//  alert('Connection type: ' + states[networkState]);
 
 
 
-  function vibrate() {
-    navigator.notification.vibrate(2000);
-  }
-  var pictureSource; // fuente de la imagen
-  var destinationType; // establece el formato del valor devuelto
+function vibrate() {
+  navigator.notification.vibrate(2000);
+}
+var pictureSource; // fuente de la imagen
+var destinationType; // establece el formato del valor devuelto
 
-  // Espera a que PhoneGap se conecte con el dispositivo
+// Espera a que PhoneGap se conecte con el dispositivo
+//
+document.addEventListener ("deviceready", onDeviceReady, false);
+
+// ¡PhoneGap está listo para ser utilizado!
+//
+function onDeviceReady () {
+  pictureSource = navigator.camera.PictureSourceType;
+  destinationType = navigator.camera.DestinationType;
+}
+
+// Llamado cuando una foto es recuperada exitosamente
+//
+function enPhotoDataSuccess (imageData) {
+  // Obtener el controlador de imagen
   //
-  document.addEventListener ("deviceready", onDeviceReady, false);
+  var smallImage = document.getElementById ('smallImage');
 
-  // ¡PhoneGap está listo para ser utilizado!
+  // Mostrar elementos de imagen
   //
-  function onDeviceReady () {
-    pictureSource = navigator.camera.PictureSourceType;
-    destinationType = navigator.camera.DestinationType;
+  smallImage.style.display = 'bloque';
+
+  // Mostrar la foto capturada
+  // Las reglas CSS en línea se utilizan para cambiar el tamaño de la imagen
+  //
+  smallImage.src = "data: image / jpeg; base64," + imageData;
+}
+
+// Llamado cuando una foto es recuperada exitosamente
+//
+function enPhotoFileSuccess (imageData) {
+  // Obtener el controlador de imagen
+  console.log (JSON.stringify (imageData));
+
+  // Obtener el controlador de imagen
+  //
+  var smallImage = document.getElementById ('smallImage');
+
+  // Mostrar elementos de imagen
+  //
+  smallImage.style.display = 'bloque';
+
+  // Mostrar la foto capturada
+  // Las reglas CSS en línea se utilizan para cambiar el tamaño de la imagen
+  //
+  smallImage.src = imageData;
+}
+
+// Llamado cuando una foto es recuperada exitosamente
+//
+function enPhotoURISuccess (imageURI) {
+  // Descomentar para ver el archivo de imagen URI
+  // console.log (imageURI);
+
+  // Obtener el controlador de imagen
+  //
+  var largeImage = document.getElementById ('largeImage');
+
+  // Mostrar elementos de imagen
+  //
+  largeImage.style.display = 'bloque';
+
+  // Mostrar la foto capturada
+  // Las reglas CSS en línea se utilizan para cambiar el tamaño de la imagen
+  //
+  largeImage.src = imageURI;
+}
+
+// Un botón llamará a esta función
+//
+function capturePhotoWithData () {
+  // Tome una fotografía con la cámara del dispositivo y recupere la imagen como una cadena codificada en base64
+  navigator.camera.getPicture (onPhotoDataSuccess, onFail, {quality: 50});
+}
+
+function capturePhotoWithFile () {
+  navigator.camera.getPicture (enPhotoFileSuccess, onFail, {quality: 50, destinationType: Camera.DestinationType.FILE_URI});
+}
+
+// Un botón llamará a esta función
+//
+function getPhoto (fuente) {
+  // Recuperar la ubicación del archivo de imagen de la fuente especificada
+  navigator.camera.getPicture (onPhotoURISuccess, onFail, {quality: 50,
+    destinationType: destinationType.FILE_URI,
+    sourceType: source});
   }
 
-  // Llamado cuando una foto es recuperada exitosamente
+  // Llamado si pasa algo malo.
   //
-  function enPhotoDataSuccess (imageData) {
-    // Obtener el controlador de imagen
-    //
-    var smallImage = document.getElementById ('smallImage');
-
-    // Mostrar elementos de imagen
-    //
-    smallImage.style.display = 'bloque';
-
-    // Mostrar la foto capturada
-    // Las reglas CSS en línea se utilizan para cambiar el tamaño de la imagen
-    //
-    smallImage.src = "data: image / jpeg; base64," + imageData;
+  function onFail (mensaje) {
+    alerta ('Falló porque:' + mensaje);
   }
 
-  // Llamado cuando una foto es recuperada exitosamente
-  //
-  function enPhotoFileSuccess (imageData) {
-    // Obtener el controlador de imagen
-    console.log (JSON.stringify (imageData));
-
-    // Obtener el controlador de imagen
-    //
-    var smallImage = document.getElementById ('smallImage');
-
-    // Mostrar elementos de imagen
-    //
-    smallImage.style.display = 'bloque';
-
-    // Mostrar la foto capturada
-    // Las reglas CSS en línea se utilizan para cambiar el tamaño de la imagen
-    //
-    smallImage.src = imageData;
-  }
-
-  // Llamado cuando una foto es recuperada exitosamente
-  //
-  function enPhotoURISuccess (imageURI) {
-    // Descomentar para ver el archivo de imagen URI
-    // console.log (imageURI);
-
-    // Obtener el controlador de imagen
-    //
-    var largeImage = document.getElementById ('largeImage');
-
-    // Mostrar elementos de imagen
-    //
-    largeImage.style.display = 'bloque';
-
-    // Mostrar la foto capturada
-    // Las reglas CSS en línea se utilizan para cambiar el tamaño de la imagen
-    //
-    largeImage.src = imageURI;
-  }
-
-  // Un botón llamará a esta función
-  //
-  function capturePhotoWithData () {
-    // Tome una fotografía con la cámara del dispositivo y recupere la imagen como una cadena codificada en base64
-    navigator.camera.getPicture (onPhotoDataSuccess, onFail, {quality: 50});
-  }
-
-  function capturePhotoWithFile () {
-    navigator.camera.getPicture (enPhotoFileSuccess, onFail, {quality: 50, destinationType: Camera.DestinationType.FILE_URI});
-  }
-
-  // Un botón llamará a esta función
-  //
-  function getPhoto (fuente) {
-    // Recuperar la ubicación del archivo de imagen de la fuente especificada
-    navigator.camera.getPicture (onPhotoURISuccess, onFail, {quality: 50,
-      destinationType: destinationType.FILE_URI,
-      sourceType: source});
-    }
-
-    // Llamado si pasa algo malo.
-    //
-    function onFail (mensaje) {
-      alerta ('Falló porque:' + mensaje);
-    }
 
 
 
+  </script>
+</body>
 
-    </script>
-    </body>
-
-    </html>
+</html>
