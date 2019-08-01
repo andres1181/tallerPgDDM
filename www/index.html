@@ -31,13 +31,9 @@ content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-
     <div class="row">
       <div class=" btn-group-vertical col">
         <button type="button" onclick="javascript:mostrarContactos();" class="btn btn-secondary">Contactos</button>
-        <br>
         <button type="button" onclick="javascript:checkConnection();" class="btn btn-secondary">Conexión</button>
-        <br>
         <button type="button" onclick="javascript:leerMock(1);" class="btn btn-secondary">Servicios</button>
-        <br>
         <button type="button" onclick="javascript:vibrate();" class="btn btn-secondary">Vibrar</button>
-        <br>
         <button type="button" onclick="javascript:capturePhotoWithFile();" class="btn btn-secondary">Cámara</button>
       </div>
     </div>
@@ -177,7 +173,7 @@ function onSuccess(contacts) {
   }
   $("#nCont").text('Numero de contactos: ' + contacts.length);
 }
-}
+
 
 function onError(contacError) {
   alert('Error!');
@@ -202,7 +198,7 @@ function checkConnection() {
 }
 //  alert('Connection type: ' + states[networkState]);
 
-}
+
 
 function vibrate() {
   navigator.notification.vibrate(2000);
@@ -310,4 +306,4 @@ function getPhoto (fuente) {
   </script>
 </body>
 
-</html> -->
+</html>
