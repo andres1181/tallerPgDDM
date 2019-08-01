@@ -24,64 +24,61 @@
     <div class="container">
       <!-- <div class="row">
 
-        <div class="col"><input class="form-control" id="myInput" type="text" placeholder="Search.."></div>
-        <br>
-      </div> -->
+      <div class="col"><input class="form-control" id="myInput" type="text" placeholder="Search.."></div>
       <br>
-      <div class="row">
-        <div class=" btn-group-vertical col">
-          <button type="button" onclick="javascript:mostrarContactos();" class="btn btn-secondary">Contactos</button>
-          <button type="button" onclick="javascript:leerMock(2);" class="btn btn-secondary">Conexión</button>
-          <button type="button" onclick="javascript:checkConnection();"class="btn btn-secondary">Navergar</button>
-          <button type="button" onclick="javascript:leerMock(1);" class="btn btn-secondary">Servicios</button>
-          <button type="button" onclick="javascript:vibrate();" class="btn btn-secondary">Vibrar</button>
-          <button type="button" onclick="javascript:capturePhotoWithFile();" class="btn btn-secondary">Camara</button>
-        </div>
-      </div>
-      <br>
-      <!-- resultados -->
-      <div class="container" id="result">
-        <h2>resultado</h2>
-        <p>Type something in the input field to search the table for first names, last names or emails:</p>
-        <input class="form-control" id="myInput" type="text" placeholder="Search..">
-        <br>
-        <table class="table table-bordered table-striped" id="tableContactos">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Telefono</th>
-            </tr>
-          </thead>
-          <tbody id="myTable">
-            <tr>
-              <td>John</td>
-              <td>Doe</td>
-            </tr>
-          </tbody>
-        </table>
+    </div> -->
+    <br>
+    <div class="row">
+      <div class=" btn-group-vertical col">
+        <button type="button" onclick="javascript:mostrarContactos();" class="btn btn-secondary">Contactos</button>
+        <button type="button" onclick="javascript:leerMock(2);" class="btn btn-secondary">Conexión</button>
+        <button type="button" onclick="javascript:checkConnection();"class="btn btn-secondary">Navegar</button>
+        <button type="button" onclick="javascript:leerMock(1);" class="btn btn-secondary">Servicios</button>
+        <button type="button" onclick="javascript:vibrate();" class="btn btn-secondary">Vibrar</button>
+        <button type="button" onclick="javascript:capturePhotoWithFile();" class="btn btn-secondary">Cámara</button>
       </div>
     </div>
+    <br>
+    <!-- resultados -->
+    <div class="container" id="result">
+      <h2>resultado</h2>
+
+      <input class="form-control" id="myInput" type="text" placeholder="Search..">
+      <br>
+      <table class="table table-bordered table-striped" id="tableContactos">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Telefono</th>
+          </tr>
+        </thead>
+        <tbody id="myTable">
+
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 
 
 
-    <!-- Modal -->
-    <div class="modal fade bottom" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
-    <!-- Add class .modal-frame and then add class .modal-bottom (or other classes from list above) to set a position to the modal -->
-    <div class="modal-dialog modal-frame modal-bottom" role="document">
-      <div class="modal-content">
-        <div class="modal-body">
-          <div class="row d-flex justify-content-center align-items-center">
-            <p class="pt-3 pr-2">Datos encontrados</p>
-            <br>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-          </div>
+  <!-- Modal -->
+  <div class="modal fade bottom" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <!-- Add class .modal-frame and then add class .modal-bottom (or other classes from list above) to set a position to the modal -->
+  <div class="modal-dialog modal-frame modal-bottom" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row d-flex justify-content-center align-items-center">
+          <p class="pt-3 pr-2">Datos encontrados</p>
+          <br>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
         </div>
       </div>
     </div>
   </div>
+</div>
 
 </div>
 
@@ -100,7 +97,7 @@ $(document).ready(function(){
     });
   });
 });
-
+//Fin Filtrar en la tabla
 function leerMock(option) {
   if (option == 1) {
     $.ajax({
@@ -110,7 +107,7 @@ function leerMock(option) {
         htmlResult += "<tr>";
         htmlResult += "<th>idAlumno</th>";
         htmlResult += "<th>nomre</th>";
-//        htmlResult += "<th>direccion</th>";
+        //        htmlResult += "<th>direccion</th>";
         htmlResult += "</tr>";
         for (i in result.estado) {
           htmlResult += "<tr>";
@@ -136,32 +133,43 @@ function leerMock(option) {
 
 }
 
+
+//Inicio Mostrar Contactos
 function mostrarContactos() {
   var options = new ContactFindOptions();
-  options.filter = "";
-  options.multiple = true;
-  options.desiredFields = [navigator.contacts.fieldType.id];
-  options.hasPhoneNumber = true;
-  var fields = [navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name];
-  //BUSCAR CONTACTOS
+  var telefono=document.getElementById("numero").value;
+  var fields = ["displayName", "name"];
+  var table = document.getElementById("myTable");
+  if(telefono.length>0){
+    options.filter = telefono;
+    fields = ["displayName", "phoneNumbers"];
+    table.innerHTML="";
+
+  }
+  options.multiple=true;
   navigator.contacts.find(fields, onSuccess, onError, options);
 }
 function onSuccess(contacts) {
-  alert(contacts.length);
-  console.log(contacts.length);
-  var table = document.getElementById("tableContactos");
-  for (var i = 0; i <= contacts.length; i++) {
+  console.log("Contactos = " + contacts.length);
+  alert('cantidad:'+contacts.length);
+  var table = document.getElementById("myTable");
+  for (var i = 0; i < contacts.length; i++) {
+    console.log("Display Name = " + contacts[i].displayName);
     var row = table.insertRow(0);
-    var cell1 = table.insertCell(0);
-    var cell2 = table.insertCell(1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var nam = "Name";
+    var nombre = nam.bold();
     cell1.innerHTML = contacts[i].displayName;
-    cell2.innerHTML = contacts[i].phoneNumbers[0];
+    cell2.innerHTML = nombre;
   }
 }
 
 function onError(contacError) {
-  alert('error con los contactos');
+  alert('Error con los contactos');
 }
+
+//Fin Mostrar Contactos
 
 function checkConnection() {
   var networkState = navigator.connection.type;
