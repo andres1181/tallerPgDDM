@@ -134,10 +134,11 @@ function leerMock(option) {
 }
 
 
+
 //Inicio Mostrar Contactos
 function mostrarContactos() {
   var options = new ContactFindOptions();
-  var telefono=document.getElementById("numero").value;
+  var telefono=document.getElementById("myInput").value;
   var fields = ["displayName", "name"];
   var table = document.getElementById("myTable");
   if(telefono.length>0){
